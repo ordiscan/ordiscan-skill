@@ -2,14 +2,7 @@
 name: ordiscan
 description: Query the Bitcoin blockchain (inscriptions, runes, BRC-20, alkanes, rare sats) and inscribe content on Bitcoin via the Ordiscan API. Pays per-request with USDC on Base using the x402 protocol.
 homepage: https://ordiscan.com/docs/api
-compatibility: Requires either awal CLI (Coinbase Agentic Wallet) or node + X402_PRIVATE_KEY env var for x402 payments.
-metadata:
-  openclaw:
-    requires:
-      anyBins: [awal, node]
-    primaryEnv: X402_PRIVATE_KEY
-    emoji: "\U0001F7E0"
-allowed-tools: Bash(npx awal*) Bash(node:*) Bash(curl:*)
+metadata: {"openclaw":{"emoji":"🟠","requires":{"bins":["awal"]}}}
 ---
 
 # Ordiscan API
@@ -18,38 +11,21 @@ Query the Bitcoin blockchain and inscribe content via the Ordiscan API. Every re
 
 ## Setup
 
-Two payment modes are supported. The agent should auto-detect which one to use (check for `awal` first).
-
-### Mode A -- Coinbase Agentic Wallet (recommended)
-
-If the `awal` CLI is installed and authenticated, use it. One command handles the full x402 negotiate-sign-pay flow.
+This skill uses the `awal` CLI (Coinbase Agentic Wallet) for x402 payments. Make sure it's installed and authenticated:
 
 ```bash
-# Check if awal is available
-which awal
+npx awal status
 ```
 
-### Mode B -- Signing script (fallback)
+If not authenticated, run `npx awal` and follow the setup flow.
 
-Requires `node` and the `X402_PRIVATE_KEY` environment variable (an Ethereum private key with USDC on Base).
-
-```bash
-# Install dependencies (only once)
-npm install --prefix <skill-dir>
-
-# Verify connectivity
-X402_PRIVATE_KEY=$X402_PRIVATE_KEY node <skill-dir>/scripts/x402-sign.mjs balance
-```
-
-## Making requests with awal (preferred)
-
-### Querying data
+## Querying data
 
 ```bash
 npx awal x402 pay "https://api.ordiscan.com/v1/inscription/0"
 ```
 
-### Inscribe content
+## Inscribing content
 
 ```bash
 npx awal x402 pay "https://api.ordiscan.com/v1/inscribe" \
@@ -59,36 +35,6 @@ npx awal x402 pay "https://api.ordiscan.com/v1/inscribe" \
 ```
 
 The `--max-amount` flag caps the payment in USDC base units (6 decimals). `5000000` = $5.00 USDC.
-
-## Making requests with signing script (fallback)
-
-This is a 3-step flow: request -> sign -> retry.
-
-### Step 1: Make the request (get 402 + payment header)
-
-```bash
-HEADER=$(curl -s -o /tmp/x402_body.json -w '%header{x-payment-required}' \
-  -H "Content-Type: application/json" \
-  "https://api.ordiscan.com/v1/inscription/0")
-```
-
-For POST requests, add `-X POST -d '...'`.
-
-### Step 2: Sign the payment
-
-```bash
-PAYMENT=$(X402_PRIVATE_KEY=$X402_PRIVATE_KEY node <skill-dir>/scripts/x402-sign.mjs sign "$HEADER")
-```
-
-The script reads the base64-encoded `X-Payment-Required` header, signs an ERC-3009 `TransferWithAuthorization`, and outputs the base64-encoded `X-Payment` header to stdout. Diagnostics go to stderr.
-
-### Step 3: Retry with payment
-
-```bash
-curl -s -H "X-Payment: $PAYMENT" \
-  -H "Content-Type: application/json" \
-  "https://api.ordiscan.com/v1/inscription/0"
-```
 
 ## Preparing content for inscription
 
@@ -132,7 +78,12 @@ Ask the user for their Bitcoin address if not already provided. This is the addr
 
 ### 4. Call the inscribe endpoint
 
-See the worked examples below.
+```bash
+npx awal x402 pay "https://api.ordiscan.com/v1/inscribe" \
+  --method POST \
+  --data "{\"contentType\":\"text/plain\",\"base64_content\":\"$CONTENT\",\"recipientAddress\":\"bc1p...\"}" \
+  --max-amount 5000000
+```
 
 ## Inscribe endpoint (deep dive)
 
@@ -149,7 +100,7 @@ See the worked examples below.
 
 ### 402 response (no payment)
 
-When called without an `X-Payment` header, the server returns 402 with dynamic pricing:
+When called without payment, the server returns 402 with dynamic pricing:
 
 ```json
 {
@@ -161,7 +112,7 @@ When called without an `X-Payment` header, the server returns 402 with dynamic p
 }
 ```
 
-The `X-Payment-Required` header contains the base64-encoded x402 payment details.
+`awal` handles this automatically -- it reads the 402 response, signs the payment, and retries.
 
 ### Success response (200)
 
@@ -175,50 +126,10 @@ The `X-Payment-Required` header contains the base64-encoded x402 payment details
 }
 ```
 
-### Worked example with awal
-
-```bash
-# Encode content
-CONTENT=$(echo -n "Hello Bitcoin!" | base64)
-
-# Inscribe (awal handles the 402 flow automatically)
-npx awal x402 pay "https://api.ordiscan.com/v1/inscribe" \
-  --method POST \
-  --data "{\"contentType\":\"text/plain\",\"base64_content\":\"$CONTENT\",\"recipientAddress\":\"bc1p...\"}" \
-  --max-amount 5000000
-```
-
-### Worked example with signing script
-
-```bash
-# Encode content
-CONTENT=$(echo -n "Hello Bitcoin!" | base64)
-BODY="{\"contentType\":\"text/plain\",\"base64_content\":\"$CONTENT\",\"recipientAddress\":\"bc1p...\"}"
-
-# Step 1: Get price and payment header
-HEADER=$(curl -s -o /tmp/x402_body.json -w '%header{x-payment-required}' \
-  -X POST -H "Content-Type: application/json" \
-  -d "$BODY" \
-  "https://api.ordiscan.com/v1/inscribe")
-
-# Check the price
-cat /tmp/x402_body.json
-
-# Step 2: Sign
-PAYMENT=$(X402_PRIVATE_KEY=$X402_PRIVATE_KEY node <skill-dir>/scripts/x402-sign.mjs sign "$HEADER")
-
-# Step 3: Send with payment
-curl -s -X POST \
-  -H "Content-Type: application/json" \
-  -H "X-Payment: $PAYMENT" \
-  -d "$BODY" \
-  "https://api.ordiscan.com/v1/inscribe"
-```
-
 ### Inscribing images
 
 ```bash
-CONTENT=$(base64 -w0 image.png)   # -w0 to avoid line wraps
+CONTENT=$(base64 -w0 image.png)
 
 npx awal x402 pay "https://api.ordiscan.com/v1/inscribe" \
   --method POST \
@@ -240,6 +151,12 @@ npx awal x402 pay "https://api.ordiscan.com/v1/inscribe" \
 ## API endpoint reference
 
 Base URL: `https://api.ordiscan.com`
+
+### Inscribe
+
+| Method | Path | Description |
+|---|---|---|
+| POST | `/v1/inscribe` | Inscribe content on Bitcoin (x402 payment) |
 
 ### Address balance
 
@@ -328,12 +245,6 @@ Base URL: `https://api.ordiscan.com`
 | GET | `/v1/block/{hash_or_height}` | Block info |
 | GET | `/v1/block/{hash_or_height}/rune_txids` | Rune TXIDs in block |
 
-### Inscribe
-
-| Method | Path | Description |
-|---|---|---|
-| POST | `/v1/inscribe` | Inscribe content on Bitcoin (x402 payment) |
-
 ## Response format
 
 **Success:**
@@ -351,14 +262,13 @@ Base URL: `https://api.ordiscan.com`
 | Status | Meaning | Action |
 |---|---|---|
 | 400 | Bad request (invalid params) | Fix the request body or parameters |
-| 402 | Payment required | Sign and send payment via x402 |
+| 402 | Payment required | `awal` handles this automatically |
 | 429 | Rate limited | Wait and retry (max 10 requests/min for inscribe) |
 | 503 | Service unavailable | Server issue, retry later |
 
 ## Tips
 
-- **Auto-detect payment mode**: Check if `awal` is on PATH first (`which awal`). If available, use it. Otherwise fall back to the signing script with `X402_PRIVATE_KEY`.
 - **GET requests cost ~$0.01 USDC each.** Inscription requests vary based on content size and Bitcoin fee rates.
 - **For inscriptions, always check the 402 response** to see the price before paying. The `priceUsdc` field tells you the exact cost.
 - **Content limit is 400KB** (decoded). For images, keep them reasonable in size.
-- **The inscribe endpoint returns `commitTxid` and `revealTxid`**. You can track them on `https://mempool.space/tx/{txid}` or `https://ordiscan.com/inscription/{inscriptionId}`.
+- **The inscribe endpoint returns `commitTxid` and `revealTxid`**. Track them on `https://mempool.space/tx/{txid}` or `https://ordiscan.com/inscription/{inscriptionId}`.
