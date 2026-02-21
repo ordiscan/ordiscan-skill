@@ -8,7 +8,7 @@ metadata:
     requires:
       anyBins: [awal, node]
     primaryEnv: X402_PRIVATE_KEY
-    emoji: "\U0001F9C0"
+    emoji: "\U0001F7E0"
 allowed-tools: Bash(npx awal*) Bash(node:*) Bash(curl:*)
 ---
 
