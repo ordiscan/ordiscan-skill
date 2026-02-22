@@ -18,13 +18,10 @@ git clone https://github.com/ordiscan/ordiscan-skill.git ~/.openclaw/skills/ordi
 
 ## Requirements
 
-The [`awal` CLI](https://github.com/coinbase/awal) (Coinbase Agentic Wallet) must be installed and authenticated. Verify with:
+One of the following payment methods is needed to pay for API requests via the x402 protocol:
 
-```bash
-npx awal status
-```
-
-If not authenticated, run `npx awal` and follow the setup flow.
+- **Signing script (default)**: Requires `node` and an Ethereum private key with USDC on Base. Works with any EVM wallet skill (e.g. `evm-wallet-skill`).
+- **[`awal` CLI](https://github.com/coinbase/awal)** (Coinbase Agentic Wallet): Alternative if already installed and authenticated. Verify with `npx awal status`.
 
 ## Docs
 
