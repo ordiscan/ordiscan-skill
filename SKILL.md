@@ -131,6 +131,8 @@ When called without payment, the server returns 402 with dynamic pricing:
 }
 ```
 
+After a successful inscription, always show the user a link to their inscription: `https://ordiscan.com/inscription/{inscriptionId}`
+
 ### Inscribing images
 
 ```bash
