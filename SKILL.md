@@ -1,6 +1,6 @@
 ---
 name: ordiscan
-description: Query the Bitcoin blockchain (inscriptions, runes, BRC-20, alkanes, rare sats) and inscribe content on Bitcoin via the Ordiscan API. Pays per-request with USDC on Base using the x402 protocol.
+description: Inscribe content on Bitcoin via the Ordiscan API. Pays per-request with USDC on Base using the x402 protocol.
 homepage: https://ordiscan.com/docs/api
 metadata: {"openclaw":{"emoji":"🟠","requires":{"bins":["awal"]}}}
 ---
@@ -150,100 +150,7 @@ npx awal x402 pay "https://api.ordiscan.com/v1/inscribe" \
 
 ## API endpoint reference
 
-Base URL: `https://api.ordiscan.com`
-
-### Inscribe
-
-| Method | Path | Description |
-|---|---|---|
-| POST | `/v1/inscribe` | Inscribe content on Bitcoin (x402 payment) |
-
-### Address balance
-
-| Method | Path | Description |
-|---|---|---|
-| GET | `/v1/address/{address}/utxos` | UTXOs with inscriptions and runes |
-| GET | `/v1/address/{address}/inscription-ids` | Owned inscription IDs |
-| GET | `/v1/address/{address}/inscriptions` | Owned inscriptions |
-| GET | `/v1/address/{address}/runes` | Rune balances |
-| GET | `/v1/address/{address}/brc20` | BRC-20 balances |
-| GET | `/v1/address/{address}/rare-sats` | Rare sat balance |
-
-### Address activity
-
-| Method | Path | Description |
-|---|---|---|
-| GET | `/v1/address/{address}/activity` | Inscription activity |
-| GET | `/v1/address/{address}/activity/runes` | Runes activity |
-| GET | `/v1/address/{address}/activity/brc20` | BRC-20 activity |
-
-### Transaction
-
-| Method | Path | Description |
-|---|---|---|
-| GET | `/v1/tx/{txid}` | Transaction info |
-| GET | `/v1/tx/{txid}/inscriptions` | New inscriptions in TX |
-| GET | `/v1/tx/{txid}/inscription-transfers` | Transferred inscriptions in TX |
-| GET | `/v1/tx/{txid}/runes` | Runes in TX |
-| GET | `/v1/tx/{txid}/alkanes` | Alkanes in TX |
-
-### Inscriptions
-
-| Method | Path | Description |
-|---|---|---|
-| GET | `/v1/inscription/{id_or_number}` | Inscription info |
-| GET | `/v1/inscription/{id_or_number}/traits` | Inscription traits |
-| GET | `/v1/inscription/{id_or_number}/activity` | Transfer activity |
-| GET | `/v1/inscriptions` | List inscriptions (with filters) |
-
-### Runes
-
-| Method | Path | Description |
-|---|---|---|
-| GET | `/v1/runes` | List runes |
-| GET | `/v1/rune/{name}` | Rune info |
-| GET | `/v1/rune/{name}/market` | Rune market info |
-
-### Collections
-
-| Method | Path | Description |
-|---|---|---|
-| GET | `/v1/collections` | List collections |
-| GET | `/v1/collection/{slug}` | Collection info |
-| GET | `/v1/collection/{slug}/inscriptions` | Collection inscriptions |
-| GET | `/v1/collection/{slug}/market` | Collection market info |
-
-### Alkanes
-
-| Method | Path | Description |
-|---|---|---|
-| GET | `/v1/alkanes` | List alkanes |
-| GET | `/v1/alkane/{id}` | Alkane info |
-| GET | `/v1/alkane/{id}/meta` | Alkane metadata |
-| GET | `/v1/address/{address}/alkanes` | Alkane address balance |
-| GET | `/v1/address/{address}/utxos/alkanes` | Alkane address UTXOs |
-
-### BRC-20
-
-| Method | Path | Description |
-|---|---|---|
-| GET | `/v1/brc20` | List BRC-20 tokens |
-| GET | `/v1/brc20/{tick}` | BRC-20 token info |
-
-### Sats & UTXOs
-
-| Method | Path | Description |
-|---|---|---|
-| GET | `/v1/sat/{number}` | Sat info |
-| GET | `/v1/utxo/{txid}:{vout}/rare-sats` | Rare sats for UTXO |
-| GET | `/v1/utxo/{txid}:{vout}/sat-ranges` | Sat ranges for UTXO |
-
-### Blocks
-
-| Method | Path | Description |
-|---|---|---|
-| GET | `/v1/block/{hash_or_height}` | Block info |
-| GET | `/v1/block/{hash_or_height}/rune_txids` | Rune TXIDs in block |
+See the [Ordiscan API documentation](https://ordiscan.com/docs/api.md)
 
 ## Response format
 
