@@ -8,21 +8,14 @@ Inscribe content on Bitcoin and query ordinals data via the Ordiscan API. Pays p
 clawhub install ordiscan
 ```
 
-## Install from git
-
-Clone into your OpenClaw skills directory:
-
-```bash
-git clone https://github.com/ordiscan/ordiscan-skill.git ~/.openclaw/skills/ordiscan
-```
+Now you can ask your agent to inscribe anything on Bitcoin! (start with text, it's simple nd cheap)
 
 ## Requirements
 
-One of the following payment methods is needed to pay for API requests via the x402 protocol:
+Your agent needs to have control of an EVM wallet with Base USDC that can pay for API requests via
+the x402 protocol.
 
-- **Signing script (default)**: Requires `node` and an Ethereum private key with USDC on Base. Works with any EVM wallet skill (e.g. `evm-wallet-skill`).
-- **[`awal` CLI](https://github.com/coinbase/awal)** (Coinbase Agentic Wallet): Alternative if already installed and authenticated. Verify with `npx awal status`.
-
-## Docs
-
-Full API documentation: https://ordiscan.com/docs/api
+**Recommended wallets:**
+- **[evm-wallet skill](https://clawhub.ai/surfer77/evm-wallet)**: Does not require any additional
+login. Stores you private key in a JSON file (only use it for small amounts).
+- **[`awal` CLI](https://github.com/coinbase/awal)** (Coinbase Agentic Wallet): Alternative if already installed and authenticated with email. Verify with `npx awal status`.
