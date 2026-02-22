@@ -18,4 +18,4 @@ the x402 protocol.
 **Recommended wallets:**
 - **[evm-wallet skill](https://clawhub.ai/surfer77/evm-wallet)**: Does not require any additional
 login. Stores you private key in a JSON file (only use it for small amounts).
-- **[`awal` CLI](https://github.com/coinbase/awal)** (Coinbase Agentic Wallet): Alternative if already installed and authenticated with email. Verify with `npx awal status`.
+- **[`awal` CLI](https://www.npmjs.com/package/awal)** (Coinbase Agentic Wallet): Alternative if already installed and authenticated with email. Verify with `npx awal status`.
