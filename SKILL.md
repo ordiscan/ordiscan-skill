@@ -186,3 +186,21 @@ See the [Ordiscan API documentation](https://ordiscan.com/docs/api.md)
 - **For inscriptions, always check the 402 response** to see the price before paying. The `priceUsdc` field tells you the exact cost.
 - **Content limit is 400KB** (decoded). For images, keep them reasonable in size.
 - **The inscribe endpoint returns `commitTxid` and `revealTxid`**. Track them on `https://mempool.space/tx/{txid}` or `https://ordiscan.com/inscription/{inscriptionId}`.
+
+## External endpoints
+
+| Endpoint | Method | Data sent |
+|---|---|---|
+| `https://api.ordiscan.com/v1/*` | GET | Query parameters only |
+| `https://api.ordiscan.com/v1/inscribe` | POST | Content type, base64-encoded content, recipient Bitcoin address |
+
+All requests are paid via x402 (USDC on Base). Payment is handled by `awal`.
+
+## Security & Privacy
+
+- All data is sent to `api.ordiscan.com` over HTTPS.
+- **GET requests** send only query parameters (inscription IDs, addresses, etc.).
+- **Inscription requests** send the content you want to inscribe (base64-encoded) and a recipient Bitcoin address. This content is published on the Bitcoin blockchain and is permanently public.
+- No data is stored locally. No credentials are read beyond what `awal` manages for x402 payments.
+
+By using this skill, your requests and inscription content are sent to Ordiscan. Only install if you trust [Ordiscan](https://ordiscan.com).
