@@ -2,17 +2,17 @@
 name: ordiscan
 description: Inscribe content on Bitcoin via the Ordiscan API. Pays per-request with USDC on Base using the x402 protocol.
 homepage: https://ordiscan.com/docs/api
-metadata: {"openclaw":{"emoji":"🟠","requires":{"bins":["awal"]}}}
+metadata: {"clawdbot":{"emoji":"🟠","requires":{"bins":["awal"]}}}
 ---
 
 # Ordiscan API
 
-Inscribe content and query the Bitcoin blockchain via the Ordiscan API. Every request is paid with USDC on Base using the **x402 payment protocol** -- no API key needed.
+Inscribe content and query Ordinals data via the Ordiscan API. Every request is paid with USDC on Base using the **x402 payment protocol** -- no API key needed.
 
 ## What this skill can do
 
 - **Inscribe content on Bitcoin** -- text, images, HTML, SVG, and any other file type. The server builds and broadcasts the Bitcoin transactions for you. You only pay USDC on Base.
-- **Query blockchain data** -- look up inscriptions, addresses, runes, BRC-20 tokens, rare sats, and more.
+- **Query Ordinals data** -- look up inscriptions, addresses, runes, BRC-20 tokens, rare sats, and more.
 
 ## Setup
 
