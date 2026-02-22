@@ -1,6 +1,6 @@
 # Ordiscan
 
-Inscribe content on Bitcoin and query ordinals data via the Ordiscan API. Pays per-request with USDC on Base using the x402 protocol — no API key needed.
+Inscribe content on Bitcoin via the Ordiscan API. Pays per-request with USDC on Base using the x402 protocol — no API key needed.
 
 ## Install from ClawHub
 
@@ -8,11 +8,11 @@ Inscribe content on Bitcoin and query ordinals data via the Ordiscan API. Pays p
 clawhub install ordiscan
 ```
 
-Now you can ask your agent to inscribe anything on Bitcoin! (start with text, it's simple nd cheap)
+ 🎉 Now you can ask your agent to inscribe anything on Bitcoin (start with text, it's simple and cheap)!
 
 ## Requirements
 
-Your agent needs to have control of an EVM wallet with Base USDC that can pay for API requests via
+Your agent needs to control an EVM wallet loaded with USDC on Base so that it can pay for API requests via
 the x402 protocol.
 
 **Recommended wallets:**
