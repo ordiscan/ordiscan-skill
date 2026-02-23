@@ -2,7 +2,7 @@
 name: ordiscan
 description: Inscribe content on Bitcoin via the Ordiscan API. Pays per-request with USDC on Base using the x402 protocol.
 homepage: https://ordiscan.com/docs/api
-metadata: {"clawdbot":{"emoji":"🟠","requires":{"anyBins":["awal","node"]}}}
+metadata: {"clawdbot":{"emoji":"🟠","requires":{"anyBins":["awal","node"],"env":["X402_PRIVATE_KEY"],"config":["~/.evm-wallet.json"]},"primaryEnv":"X402_PRIVATE_KEY"}}
 ---
 
 # Ordiscan API
@@ -22,11 +22,13 @@ Two payment modes are supported. Use the signing script by default. Only use `aw
 
 Requires `node` and the `X402_PRIVATE_KEY` environment variable (an Ethereum private key with USDC on Base).
 
-If the user has a wallet skill (e.g. `evm-wallet-skill` with `~/.evm-wallet.json`), read the private key from their wallet file and pass it as `X402_PRIVATE_KEY`. For example:
+If `X402_PRIVATE_KEY` is not already set, check if `~/.evm-wallet.json` exists (created by the `evm-wallet` skill). If it does, read the private key from it:
 
 ```bash
 X402_PRIVATE_KEY=$(node -e "console.log(JSON.parse(require('fs').readFileSync(require('os').homedir()+'/.evm-wallet.json','utf8')).privateKey)")
 ```
+
+If neither the env var nor the wallet file is available, suggest using the `awal` wallet.
 
 ```bash
 # Install dependencies (only once)
